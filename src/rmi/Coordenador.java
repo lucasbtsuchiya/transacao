@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
  */
 public class Coordenador extends javax.swing.JFrame {
     Salas salas = null;
+    Materiais materiais = null;
     /**
      * Creates new form Coordenador
      */
@@ -26,8 +27,11 @@ public class Coordenador extends javax.swing.JFrame {
         
         initComponents();
         try {
-            String localizacao = "//localhost/salas";
-            salas = (Salas) Naming.lookup(localizacao);
+            String localizacao_salas = "//localhost/salas";
+            salas = (Salas) Naming.lookup(localizacao_salas);
+            String localizacao_materiais = "//localhost/materiais";
+            materiais = (Materiais) Naming.lookup(localizacao_materiais);
+            
         } catch (NotBoundException ex) {
             JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage());
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
@@ -65,14 +69,14 @@ public class Coordenador extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btn_sala)
-                .addContainerGap(284, Short.MAX_VALUE))
+                .addContainerGap(445, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(82, 82, 82)
                 .addComponent(btn_sala)
-                .addContainerGap(186, Short.MAX_VALUE))
+                .addContainerGap(173, Short.MAX_VALUE))
         );
 
         pack();
@@ -81,6 +85,7 @@ public class Coordenador extends javax.swing.JFrame {
     private void btn_salaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_salaActionPerformed
         try {
             JOptionPane.showMessageDialog(null, "Data e Hora do servidor: " + salas.getDataHora());
+            JOptionPane.showMessageDialog(null, "Data e Hora do servidor: " + materiais.getDataHora());
         } catch (RemoteException ex) {
             JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage());
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
