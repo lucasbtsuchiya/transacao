@@ -84,7 +84,7 @@ public class Coordenador extends javax.swing.JFrame {
 
     private void btn_salaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_salaActionPerformed
         try {
-            JOptionPane.showMessageDialog(null, "Data e Hora do servidor: " + salas.getDataHora());
+            JOptionPane.showMessageDialog(null, "Data e Hora do servidor: " + salas.getSalas(1,"Sala2"));
             JOptionPane.showMessageDialog(null, "Data e Hora do servidor: " + materiais.getDataHora());
         } catch (RemoteException ex) {
             JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage());

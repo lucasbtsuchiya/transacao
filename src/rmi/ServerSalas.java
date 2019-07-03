@@ -10,7 +10,9 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  *
@@ -18,7 +20,12 @@ import java.util.Calendar;
  */
 public class ServerSalas extends UnicastRemoteObject implements Salas {
     
-    protected ServerSalas() throws RemoteException {
+    
+    public ArrayList lista_salas = new ArrayList();
+    public ArrayList reservar_sala = new ArrayList();
+    
+ 
+    public ServerSalas() throws RemoteException {
 	super();
 	// TODO Auto-generated constructor stub
     }
@@ -28,6 +35,9 @@ public class ServerSalas extends UnicastRemoteObject implements Salas {
             ServerSalas servidorsalas = new ServerSalas();
             String localizacao = "//localhost/salas";
             Naming.rebind(localizacao, servidorsalas);
+            servidorsalas.lista_salas.add("Sala1");
+            servidorsalas.lista_salas.add("Sala2");
+            
         } catch (MalformedURLException e) {
 		System.out.println("Erro de URL mal formada: "+e.getMessage());
 	} catch (RemoteException e) {
@@ -36,10 +46,18 @@ public class ServerSalas extends UnicastRemoteObject implements Salas {
     }
     
     @Override
-    public String getDataHora() throws RemoteException {
+    public String getSalas(int id, String sala) throws RemoteException {
         // TODO Auto-generated method stub
-	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy MM:mm");
-	return "ServerSalas";
+        ReservaSala r = new ReservaSala();
+   
+        if(lista_salas.contains(sala)){
+            r.setId(1);
+            r.setSala(sala);
+            lista_salas.remove(sala);
+            return "Sala Reservada";
+        }else
+            return "Sala não disponivel";
+        
     }
 
     @Override
