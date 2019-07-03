@@ -9,17 +9,8 @@ package rmi;
  *
  * @author Lucas B Tsuchiya e Pedro Bazia Neto
  */
-public class ReservaSala {
+public class ReservaMaterial {
     public int id;
-
-    public String getMaterial() {
-        return material;
-    }
-
-    public void setMaterial(String material) {
-        this.material = material;
-    }
-    public String sala;
     public String material;
 
     public int getId() {
@@ -30,11 +21,11 @@ public class ReservaSala {
         this.id = id;
     }
 
-    public String getSala() {
-        return sala;
+    public String getMaterial() {
+        return material;
     }
 
-    public void setSala(String sala) {
-        this.sala = sala;
+    public void setMaterial(String material) {
+        this.material = material;
     }   
 }

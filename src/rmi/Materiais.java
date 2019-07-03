@@ -10,10 +10,9 @@ import java.rmi.RemoteException;
 
 /**
  *
- * @author lucastsuchiya
+ * @author Lucas B Tsuchiya e Pedro Bazia Neto
  */
 public interface Materiais extends Remote{
-    public String getDataHora() throws RemoteException;	
-    public String inverteString(String string) throws RemoteException;
-    
+    public int consultarMateriais(String material)throws RemoteException;
+    public String reservarMateriais(int id, String material) throws RemoteException;
 }

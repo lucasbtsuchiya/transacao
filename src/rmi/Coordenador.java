@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author lucastsuchiya
+ * @author Lucas B Tsuchiya e Pedro Bazia Neto
  */
 public class Coordenador extends javax.swing.JFrame {
     Salas salas = null;
@@ -51,46 +51,102 @@ public class Coordenador extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btn_sala = new javax.swing.JButton();
+        btn_reserva = new javax.swing.JButton();
+        txt_id = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        txt_sala = new javax.swing.JTextField();
+        txt_material = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btn_sala.setText("Reservar Sala");
-        btn_sala.addActionListener(new java.awt.event.ActionListener() {
+        btn_reserva.setText("Reservar Sala");
+        btn_reserva.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_salaActionPerformed(evt);
+                btn_reservaActionPerformed(evt);
             }
         });
+
+        jLabel1.setText("ID");
+
+        jLabel2.setText("Sala");
+
+        txt_sala.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_salaActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Material");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btn_sala)
-                .addContainerGap(445, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txt_id, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txt_sala, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(txt_material, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(104, 104, 104)
+                        .addComponent(btn_reserva)))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(82, 82, 82)
-                .addComponent(btn_sala)
-                .addContainerGap(173, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(13, 13, 13)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txt_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_sala, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_material, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(45, 45, 45)
+                .addComponent(btn_reserva)
+                .addContainerGap(51, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btn_salaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_salaActionPerformed
+    private void btn_reservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_reservaActionPerformed
+        int id = Integer.parseInt(txt_id.getText());
+        String sala = txt_sala.getText();
+        String material = txt_material.getText();
         try {
-            JOptionPane.showMessageDialog(null, "Data e Hora do servidor: " + salas.getSalas(1,"Sala2"));
-            JOptionPane.showMessageDialog(null, "Data e Hora do servidor: " + materiais.getDataHora());
+            if(salas.consultarSala(sala) == 1 && materiais.consultarMateriais(material) == 1){
+                salas.reservarSala(id, sala);
+                materiais.reservarMateriais(id, material);
+                JOptionPane.showMessageDialog(null, "Sala Reservada");
+            }else
+                JOptionPane.showMessageDialog(null, "Sala Não disponivel");
+            
+            
         } catch (RemoteException ex) {
             JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage());
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btn_salaActionPerformed
+    }//GEN-LAST:event_btn_reservaActionPerformed
+
+    private void txt_salaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_salaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_salaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -128,6 +184,12 @@ public class Coordenador extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_sala;
+    private javax.swing.JButton btn_reserva;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JTextField txt_id;
+    private javax.swing.JTextField txt_material;
+    private javax.swing.JTextField txt_sala;
     // End of variables declaration//GEN-END:variables
 }

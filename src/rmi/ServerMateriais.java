@@ -10,12 +10,16 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 /**
  *
- * @author lucastsuchiya
+ * @author Lucas B Tsuchiya e Pedro Bazia Neto
  */
 public class ServerMateriais extends UnicastRemoteObject implements Materiais{
+    
+    public ArrayList lista_materiais = new ArrayList();
+    public ArrayList reservar_materiais = new ArrayList(); 
     
     protected ServerMateriais() throws RemoteException {
 	super();
@@ -25,6 +29,8 @@ public class ServerMateriais extends UnicastRemoteObject implements Materiais{
         try {
             ServerMateriais servidormateriais = new ServerMateriais();
             String localizacao = "//localhost/materiais";
+            servidormateriais.lista_materiais.add("Projetor");
+            servidormateriais.lista_materiais.add("Notebook");
             Naming.rebind(localizacao, servidormateriais);
         } catch (MalformedURLException e) {
             System.out.println("Erro de URL mal formada: "+e.getMessage());
@@ -34,19 +40,25 @@ public class ServerMateriais extends UnicastRemoteObject implements Materiais{
     }
     
     @Override
-    public String getDataHora() throws RemoteException {
-        // TODO Auto-generated method stub
-	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy MM:mm");
-	return "Server Materiais";
-    }
-
-    @Override
-    public String inverteString(String string) throws RemoteException {
-        // TODO Auto-generated method stub
-	String retorno = "";
-	StringBuffer strb = new StringBuffer(string);
-	retorno = strb.reverse().toString();
-	return retorno;
+    public int consultarMateriais(String material)throws RemoteException{
+       if(lista_materiais.contains(material)){
+            return 1;
+        }else
+            return 0;  
     }
     
+    @Override
+    public String reservarMateriais(int id, String material) throws RemoteException {
+        // TODO Auto-generated method stub
+        ReservaMaterial r = new ReservaMaterial();
+        if(lista_materiais.contains(material)){
+            r.setId(1);
+            r.setMaterial(material);
+            reservar_materiais.add(r);
+            lista_materiais.remove(material);
+            return "Sala Reservada";
+        }else
+            return "Sala não disponivel";
+        
+    }
 }

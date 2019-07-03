@@ -9,14 +9,12 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+
 
 /**
  *
- * @author lucastsuchiya
+ * @author Lucas B Tsuchiya e Pedro Bazia Neto
  */
 public class ServerSalas extends UnicastRemoteObject implements Salas {
     
@@ -46,13 +44,21 @@ public class ServerSalas extends UnicastRemoteObject implements Salas {
     }
     
     @Override
-    public String getSalas(int id, String sala) throws RemoteException {
+    public int consultarSala(String sala)throws RemoteException{
+       if(lista_salas.contains(sala)){
+            return 1;
+        }else
+            return 0;  
+    }
+    
+    @Override
+    public String reservarSala(int id, String sala) throws RemoteException {
         // TODO Auto-generated method stub
         ReservaSala r = new ReservaSala();
-   
         if(lista_salas.contains(sala)){
             r.setId(1);
             r.setSala(sala);
+            reservar_sala.add(r);
             lista_salas.remove(sala);
             return "Sala Reservada";
         }else
