@@ -103,7 +103,7 @@ public class ServerMateriais extends UnicastRemoteObject implements Materiais{
     
     // Consulta a disponibilidade de materiais
     @Override
-    public int consultarMateriais(String material)throws RemoteException{
+    public synchronized int consultarMateriais(String material)throws RemoteException{
         try {
             //Criar arquivo
             File arquivo = new File("C:\\LogServerMateriais.txt");
@@ -133,7 +133,7 @@ public class ServerMateriais extends UnicastRemoteObject implements Materiais{
         }
         return 0;
     }
-    
+    //Método para efutar a reserva dos materiais
     @Override
     public synchronized String reservarMateriais(int id, String material) throws RemoteException {
         try {
@@ -150,11 +150,14 @@ public class ServerMateriais extends UnicastRemoteObject implements Materiais{
             fw = new FileWriter(arquivo.getAbsoluteFile(),true);
             BufferedWriter bw = new BufferedWriter(fw);
             time = LocalTime.now();
-            
+            //Verifica se o material esta disponível 
             if(lista_materiais.contains(material)){
+                //Instancia o objeto e coloca na lista 
                 r.setId(1);
                 r.setMaterial(material);
+                //Efetua a reserva do material
                 reservar_materiais.add(r);
+                //Remove o material da lista de disponibilidade
                 lista_materiais.remove(material);
                 bw.write(time+" Materiais Reservado \r\n");
                 bw.close();

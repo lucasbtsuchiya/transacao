@@ -91,13 +91,14 @@ public class ServerSalas extends UnicastRemoteObject implements Salas {
                 Logger.getLogger(ServerSalas.class.getName()).log(Level.SEVERE, null, ex);
             }
         }else
-           //Registro de Log
+           //Registro de Log 
+            // Caso o servidor esteja indisponível
             System.out.println("Servidor Salas indisponível \r\n");
             return 0;  
     }
     // Consulta a disponibilidade da sala
     @Override
-    public int consultarSala(String sala)throws RemoteException{
+    public synchronized int consultarSala(String sala)throws RemoteException{
         try {
             File arquivo = new File("C:\\LogServerSalas.txt");
             //Se o arquivo não existir, ele gera
@@ -121,6 +122,7 @@ public class ServerSalas extends UnicastRemoteObject implements Salas {
                 }
             }else
                 //Registro de Log
+                //Caso a sala não esteja disponviel 
                 bw.write(time+" Sala não disponível \r\n");
                 bw.close();
                 System.out.println("Sala não disponível \r\n");
@@ -150,6 +152,7 @@ public class ServerSalas extends UnicastRemoteObject implements Salas {
                 r.setId(1);
                 r.setSala(sala);
                 reservar_sala.add(r);
+                //Removendo sala da lista de disponibilidade
                 lista_salas.remove(sala);
                 bw.write(time+" Sala Reservada! \r\n");
                 bw.close();
@@ -157,6 +160,7 @@ public class ServerSalas extends UnicastRemoteObject implements Salas {
                 return "Sala Reservada";
                 
             }else
+                //Caso a sala não esteja disponivel
                 bw.write(time+"Sala Não disponivel! Reserva Cancelada \r\n");
                 bw.close();
                 return "Sala não disponivel";

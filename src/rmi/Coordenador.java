@@ -142,7 +142,8 @@ public class Coordenador extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    //Botão/Método que executa consulta, reserva e teste de comunicação entre os servidores.
     private void btn_reservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_reservaActionPerformed
         try {                                            
             int id = Integer.parseInt(txt_id.getText());
@@ -187,17 +188,14 @@ public class Coordenador extends javax.swing.JFrame {
                         //Registro de Log
                         bw.write(time+" Sala ou Material não disponível  \r\n");
                         bw.close();
-                       // bw.write(time+" Status Transação: Abortada  \r\n");
-                       // bw.close();
                         System.out.println("Sala ou Material não disponível");
                         System.out.println("Status Transação: Abortada");
                         JOptionPane.showMessageDialog(null, "Sala ou Material Não Disponivel!!");
                     }
                 }else{
+                    //Caso algum dos servidores não tenha disponibilidade
                    bw.write(time+" Servidor não disponível  \r\n");
                    bw.close();
-                   // bw.write(time+" Status Transação: Abortada \r\n");
-                   // bw.close();
                     System.out.println("Servidor não disponível");
                     System.out.println("Status Transação: Abortada");
                     JOptionPane.showMessageDialog(null, "Servidor Não Disponivel!!");
