@@ -130,13 +130,30 @@ public class Coordenador extends javax.swing.JFrame {
         String sala = txt_sala.getText();
         String material = txt_material.getText();
         try {
-            if(salas.consultarSala(sala) == 1 && materiais.consultarMateriais(material) == 1){
-                salas.reservarSala(id, sala);
-                materiais.reservarMateriais(id, material);
-                JOptionPane.showMessageDialog(null, "Sala Reservada");
-            }else
-                JOptionPane.showMessageDialog(null, "Sala Não disponivel");
-            
+            System.out.println("Testando comunicação com os servidores");
+            if(salas.TesteSala() == 1 && materiais.TesteMateriais() == 1){
+                System.out.println("Servidores disponível");
+                //Garantindo a Atomicidade
+                if(salas.consultarSala(sala) == 1 && materiais.consultarMateriais(material) == 1){
+                    //Registro de Log
+                    System.out.println("Sala e Material Disponível");
+                    //Reservando Material
+                    salas.reservarSala(id, sala);
+                    materiais.reservarMateriais(id, material);
+                    JOptionPane.showMessageDialog(null, "Sala e Material Reservados");
+                    System.out.println("Sala e Material Reservado");
+                }else{
+                    //Registro de Log
+                    System.out.println("Sala ou Material não disponível");
+                    System.out.println("Status Transação: Abortada");
+                    JOptionPane.showMessageDialog(null, "Sala ou Material Não Disponivel!!");
+                }
+            }else{
+               System.out.println("Servidor não disponível");
+               System.out.println("Status Transação: Abortada");
+                JOptionPane.showMessageDialog(null, "Servidor Não Disponivel!!");
+            }
+                
             
         } catch (RemoteException ex) {
             JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage());

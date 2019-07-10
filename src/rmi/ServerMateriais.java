@@ -38,12 +38,30 @@ public class ServerMateriais extends UnicastRemoteObject implements Materiais{
             System.out.println("Erro: "+e.getMessage());
         }
     }
+     @Override
+    public int TesteMateriais()throws RemoteException{
+        //Variável de controle
+        int teste = 1;
+        if (teste == 1){
+           //Registro de Log
+           System.out.println("Servidor disponível");
+            return 1;
+        }else
+           //Registro de Log
+           System.out.println("Servidor indisponível");
+            return 0;  
+    }
     
+    // Consulta a disponibilidade de materiais
     @Override
     public int consultarMateriais(String material)throws RemoteException{
        if(lista_materiais.contains(material)){
+           //Registro de Log
+           System.out.println("Material disponível");
             return 1;
         }else
+           //Registro de Log
+           System.out.println("Material não disponível");
             return 0;  
     }
     

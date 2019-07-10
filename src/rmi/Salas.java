@@ -15,8 +15,8 @@ import java.rmi.RemoteException;
 public interface Salas extends Remote{
     
     //public String getDataHora() throws RemoteException;
+    public int TesteSala()throws RemoteException;
     public int consultarSala(String sala)throws RemoteException;
     public String reservarSala(int id, String sala) throws RemoteException;
-    public String inverteString(String string) throws RemoteException;
     
 }

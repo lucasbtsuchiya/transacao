@@ -13,6 +13,7 @@ import java.rmi.RemoteException;
  * @author Lucas B Tsuchiya e Pedro Bazia Neto
  */
 public interface Materiais extends Remote{
+    public int TesteMateriais()throws RemoteException;
     public int consultarMateriais(String material)throws RemoteException;
     public String reservarMateriais(int id, String material) throws RemoteException;
 }
