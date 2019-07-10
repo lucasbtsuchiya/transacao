@@ -26,24 +26,27 @@ import java.util.logging.Logger;
  */
 public class ServerSalas extends UnicastRemoteObject implements Salas {
     
-    
+    //Listas de salas e lista de reservas
     public ArrayList lista_salas = new ArrayList();
     public ArrayList reservar_sala = new ArrayList();
     public LocalTime time = LocalTime.now();
     
- 
+    //Contrutor 
     public ServerSalas() throws RemoteException {
 	super();
 	// TODO Auto-generated constructor stub
     }
-    
+    //Classe principal
     public static void main(String[] args) throws RemoteException {
         try {
+            //Configurações para executar o servidor
             ServerSalas servidorsalas = new ServerSalas();
             String localizacao = "//localhost/salas";
             Naming.rebind(localizacao, servidorsalas);
+            //Adicionando salas na lista
             servidorsalas.lista_salas.add("Sala1");
             servidorsalas.lista_salas.add("Sala2");
+            //Pegando hora
             servidorsalas.time = LocalTime.now();
             //Criar arquivo 
             File arquivo = new File("C:\\LogServerSalas.txt");
@@ -55,13 +58,6 @@ public class ServerSalas extends UnicastRemoteObject implements Salas {
             BufferedWriter bw = new BufferedWriter(fw); 
             bw.write(servidorsalas.time+" Servidor Executando e Salas Adcionadas \r\n");
             bw.close();
-            /*
-            FileWriter arq = new FileWriter("C:\\LogServerSalas.txt");
-            PrintWriter gravarAq = new PrintWriter(arq);
-            gravarAq.printf(servidorsalas.time+" Servidor Executando e Salas Adcionadas");
-            System.out.println(servidorsalas.time+ " Servidor Executando e Salas Adcionadas");
-            arq.close();
-                    */
             
         } catch (MalformedURLException e) {
 		System.out.println("Erro de URL mal formada: "+e.getMessage());
@@ -71,6 +67,7 @@ public class ServerSalas extends UnicastRemoteObject implements Salas {
             Logger.getLogger(ServerSalas.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    //Método para testar a disponibilidade do servidor
     @Override
     public int TesteSala()throws RemoteException{
         //Variável de controle
@@ -87,14 +84,15 @@ public class ServerSalas extends UnicastRemoteObject implements Salas {
                 FileWriter fw = new FileWriter(arquivo.getAbsoluteFile(),true);
                 BufferedWriter bw = new BufferedWriter(fw);
                 time = LocalTime.now();
-                bw.write(time+" Servidor disponível");
+                bw.write(time+" Servidor Salas disponível \r\n");
                 bw.close();
+                return 1;
             } catch (IOException ex) {
                 Logger.getLogger(ServerSalas.class.getName()).log(Level.SEVERE, null, ex);
             }
         }else
            //Registro de Log
-           System.out.println("Servidor indisponível");
+            System.out.println("Servidor Salas indisponível \r\n");
             return 0;  
     }
     // Consulta a disponibilidade da sala
@@ -110,45 +108,70 @@ public class ServerSalas extends UnicastRemoteObject implements Salas {
             BufferedWriter bw = new BufferedWriter(fw);
             time = LocalTime.now();
             
-            
+            //Verificando se a sala esta disponível
             if(lista_salas.contains(sala)){
                 try {
                     //Registro de Log
-                    bw.write(time+" Servidor disponível");
+                    bw.write(time+" Sala Disponível \r\n");
                     bw.close();
-                    System.out.println("Sala disponível");
+                    System.out.println("Sala Não Disponível \r\n");
                     return 1;
                 } catch (IOException ex) {
                     Logger.getLogger(ServerSalas.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }else
                 //Registro de Log
-                bw.write(time+" Servidor disponível");
+                bw.write(time+" Sala não disponível \r\n");
                 bw.close();
-                System.out.println("Sala não disponível");
+                System.out.println("Sala não disponível \r\n");
             return 0;
         } catch (IOException ex) {
             Logger.getLogger(ServerSalas.class.getName()).log(Level.SEVERE, null, ex);
         }
         return 0;
     }
-
     
+    //Método para efutar a reserva da sala
     @Override
     public synchronized String reservarSala(int id, String sala) throws RemoteException {
-        // TODO Auto-generated method stub
-        ReservaSala r = new ReservaSala();
-        if(lista_salas.contains(sala)){
-            r.setId(1);
-            r.setSala(sala);
-            reservar_sala.add(r);
-            lista_salas.remove(sala);
-            System.out.println("Sala Reservada");
-            return "Sala Reservada";
+        FileWriter fw = null;
+        try {
+            // TODO Auto-generated method stub
+            File arquivo = new File("C:\\LogServerSalas.txt");
+            //Se o arquivo não existir, ele gera
+            fw = new FileWriter(arquivo.getAbsoluteFile(),true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            time = LocalTime.now();
             
-        }else
-            return "Sala não disponivel";
+            ReservaSala r = new ReservaSala();
+            //Verificando sala
+            if(lista_salas.contains(sala)){
+                //Fazendo reserva 
+                r.setId(1);
+                r.setSala(sala);
+                reservar_sala.add(r);
+                lista_salas.remove(sala);
+                bw.write(time+" Sala Reservada! \r\n");
+                bw.close();
+                System.out.println("Sala Reservada");
+                return "Sala Reservada";
+                
+            }else
+                bw.write(time+"Sala Não disponivel! Reserva Cancelada \r\n");
+                bw.close();
+                return "Sala não disponivel";
+        } catch (IOException ex) {
+            Logger.getLogger(ServerSalas.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fw.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ServerSalas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return null;
         
     }
+    
     
 }

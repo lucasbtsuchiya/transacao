@@ -5,10 +5,15 @@
  */
 package rmi;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.time.LocalTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -27,10 +32,21 @@ public class Coordenador extends javax.swing.JFrame {
         
         initComponents();
         try {
+            //Configurações para conectar com o servidor
             String localizacao_salas = "//localhost/salas";
             salas = (Salas) Naming.lookup(localizacao_salas);
             String localizacao_materiais = "//localhost/materiais";
-            materiais = (Materiais) Naming.lookup(localizacao_materiais);
+            materiais = (Materiais) Naming.lookup(localizacao_materiais); //Criar arquivo
+            LocalTime time = LocalTime.now();
+            File arquivo = new File("C:\\LogCoordenador.txt");
+            //Se o arquivo não existir, ele gera
+            if(!arquivo.exists()){
+                arquivo.createNewFile();
+            }
+            FileWriter fw = new FileWriter(arquivo.getAbsoluteFile(),true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(time+" Coordenador Executando\r\n");
+            bw.close();
             
         } catch (NotBoundException ex) {
             JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage());
@@ -39,6 +55,8 @@ public class Coordenador extends javax.swing.JFrame {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Coordenador.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -61,7 +79,7 @@ public class Coordenador extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btn_reserva.setText("Reservar Sala");
+        btn_reserva.setText("Reservar");
         btn_reserva.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_reservaActionPerformed(evt);
@@ -126,38 +144,72 @@ public class Coordenador extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_reservaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_reservaActionPerformed
-        int id = Integer.parseInt(txt_id.getText());
-        String sala = txt_sala.getText();
-        String material = txt_material.getText();
-        try {
-            System.out.println("Testando comunicação com os servidores");
-            if(salas.TesteSala() == 1 && materiais.TesteMateriais() == 1){
-                System.out.println("Servidores disponível");
-                //Garantindo a Atomicidade
-                if(salas.consultarSala(sala) == 1 && materiais.consultarMateriais(material) == 1){
-                    //Registro de Log
-                    System.out.println("Sala e Material Disponível");
-                    //Reservando Material
-                    salas.reservarSala(id, sala);
-                    materiais.reservarMateriais(id, material);
-                    JOptionPane.showMessageDialog(null, "Sala e Material Reservados");
-                    System.out.println("Sala e Material Reservado");
-                }else{
-                    //Registro de Log
-                    System.out.println("Sala ou Material não disponível");
-                    System.out.println("Status Transação: Abortada");
-                    JOptionPane.showMessageDialog(null, "Sala ou Material Não Disponivel!!");
-                }
-            }else{
-               System.out.println("Servidor não disponível");
-               System.out.println("Status Transação: Abortada");
-                JOptionPane.showMessageDialog(null, "Servidor Não Disponivel!!");
+        try {                                            
+            int id = Integer.parseInt(txt_id.getText());
+            String sala = txt_sala.getText();
+            String material = txt_material.getText();
+            LocalTime time = LocalTime.now();
+            File arquivo = new File("C:\\LogCoordenador.txt");
+            //Se o arquivo não existir, ele gera
+            if(!arquivo.exists()){
+                arquivo.createNewFile();
             }
-                
+            FileWriter fw = new FileWriter(arquivo.getAbsoluteFile(),true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(time+" Reserva\r\n");
+            //bw.close();
             
-        } catch (RemoteException ex) {
-            JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage());
-            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                //Testando comunicação com os servidores
+                bw.write(time+" Testando comunicação com os servidores \r\n");
+                //bw.close();
+                System.out.println("Testando comunicação com os servidores");
+                if(salas.TesteSala() == 1 && materiais.TesteMateriais() == 1){
+                    bw.write(time+" Servidores disponível \r\n");
+                    //bw.close();
+                    System.out.println("Servidores disponível");
+                    
+                    //Garantindo a Atomicidade
+                    //Testando a disponibilidade das salas e dos materiais
+                    if(salas.consultarSala(sala) == 1 && materiais.consultarMateriais(material) == 1){
+                        //Registro de Log
+                        bw.write(time+" Sala e Material Disponível \r\n");
+                        //bw.close();
+                        System.out.println("Sala e Material Disponível");
+                        //Reservando Material
+                        salas.reservarSala(id, sala);
+                        materiais.reservarMateriais(id, material);
+                        JOptionPane.showMessageDialog(null, "Sala e Material Reservados");
+                        System.out.println("Sala e Material Reservado");
+                        bw.write(time+" Sala e Material Reservado \r\n");
+                        bw.close();
+                    }else{
+                        //Registro de Log
+                        bw.write(time+" Sala ou Material não disponível  \r\n");
+                        bw.close();
+                       // bw.write(time+" Status Transação: Abortada  \r\n");
+                       // bw.close();
+                        System.out.println("Sala ou Material não disponível");
+                        System.out.println("Status Transação: Abortada");
+                        JOptionPane.showMessageDialog(null, "Sala ou Material Não Disponivel!!");
+                    }
+                }else{
+                   bw.write(time+" Servidor não disponível  \r\n");
+                   bw.close();
+                   // bw.write(time+" Status Transação: Abortada \r\n");
+                   // bw.close();
+                    System.out.println("Servidor não disponível");
+                    System.out.println("Status Transação: Abortada");
+                    JOptionPane.showMessageDialog(null, "Servidor Não Disponivel!!");
+                }
+                
+                
+            } catch (RemoteException ex) {
+                JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage());
+                Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Coordenador.class.getName()).log(Level.SEVERE,null, ex);
         }
     }//GEN-LAST:event_btn_reservaActionPerformed
 
